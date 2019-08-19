@@ -12,7 +12,7 @@ var schema = buildSchema(`
   }
 
   type Company {
-    name: String
+    name: String!
   }
 `);
 
@@ -32,14 +32,16 @@ var root = {
   // getCompany: companyGetter(name)
   getCompany: async (_, {name}) => {
 
-    const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${name}&apikey=42342fds234243`
+    const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${name}&apikey=42342fds2re34243`
     const res = await axios.get(url)
-      .then(function(response) {
-        return response.data;
+      .then(response => {
+        
+        console.log(response.data)
+        return 'llllll'
       }
-    );
+    )
     // console.log(res.bestMatches[0]["2. name"])
-    return 'lol'
+    return res
     // console.log(res.bestMatches[0]["2. name"], 'lollll' );
     // return res.bestMatches[0]["2. name"]
 
