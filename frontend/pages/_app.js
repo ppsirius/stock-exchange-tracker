@@ -21,10 +21,15 @@ class Layout extends React.Component {
 
         <LayoutAntd>
           <Nav />
-          <Content style={{ minHeight: "calc(100vh - 64px)" }}>
-            {children}
-          </Content>
+          <Content className="content">{children}</Content>
         </LayoutAntd>
+
+        <style jsx>{`
+          :global(.content) {
+            min-height: calc(100vh - 64px);
+            padding: 40px 50px;
+          }
+        `}</style>
       </div>
     );
   }

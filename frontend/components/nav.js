@@ -29,7 +29,7 @@ const Nav = () => (
             </Link>
           </Menu.Item>
           <Menu.Item key="2">
-            <Link href="/addCompany">
+            <Link href="/add-company">
               <a>Track new company</a>
             </Link>
           </Menu.Item>
