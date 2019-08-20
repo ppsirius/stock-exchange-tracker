@@ -1,13 +1,14 @@
 import React from "react";
-import Link from "next/link";
-import Head from "next/head";
 import App from "next/app";
-import "antd/dist/antd.css";
-// @todo separate nav
-// import Nav from "../components/nav";
+import Head from "next/head";
 
+// Ant Design
+import "antd/dist/antd.css";
 import { Layout as LayoutAntd } from "antd";
-const { Header, Content } = LayoutAntd;
+const { Content } = LayoutAntd;
+
+// Components
+import Nav from "../components/nav";
 
 class Layout extends React.Component {
   render() {
@@ -19,16 +20,7 @@ class Layout extends React.Component {
         </Head>
 
         <LayoutAntd>
-          <Header>
-            <div className="logo">
-              <Link href="/">
-                <a>Stock Exchange</a>
-              </Link>
-              <Link href="/companies">
-                <a>Companies</a>
-              </Link>
-            </div>
-          </Header>
+          <Nav />
           <Content style={{ minHeight: "calc(100vh - 64px)" }}>
             {children}
           </Content>

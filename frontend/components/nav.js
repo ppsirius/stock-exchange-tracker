@@ -1,56 +1,50 @@
-import React from 'react'
-import Link from 'next/link'
+import React from "react";
+import Link from "next/link";
 
-const links = [
-  { href: 'https://zeit.co/now', label: 'ZEIT' },
-  { href: 'https://github.com/zeit/next.js', label: 'GitHub' }
-].map(link => {
-  link.key = `nav-link-${link.href}-${link.label}`
-  return link
-})
+// Ant Design
+import { Layout as LayoutAntd, Menu } from "antd";
+const { Header } = LayoutAntd;
+import { Row, Col } from "antd";
 
 const Nav = () => (
-  <nav>
-    <ul>
-      <li>
-        <Link href='/'>
-          <a>Home</a>
-        </Link>
-      </li>
-      {links.map(({ key, href, label }) => (
-        <li key={key}>
-          <a href={href}>{label}</a>
-        </li>
-      ))}
-    </ul>
+  <Header>
+    <Row type="flex" justify="start">
+      <Col xs={20} sm={6} md={4} lg={3}>
+        <div className="logo">
+          <Link href="/">
+            <a>Stock Exchange</a>
+          </Link>
+        </div>
+      </Col>
+      <Col xs={4} md={16}>
+        <Menu
+          theme="dark"
+          mode="horizontal"
+          // defaultSelectedKeys={['2']}
+          style={{ lineHeight: "64px" }}
+        >
+          <Menu.Item key="1">
+            <Link href="/companies">
+              <a>Companies</a>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="2">
+            <Link href="/addCompany">
+              <a>Track new company</a>
+            </Link>
+          </Menu.Item>
+        </Menu>
+      </Col>
+    </Row>
 
     <style jsx>{`
-      :global(body) {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, Avenir Next, Avenir,
-          Helvetica, sans-serif;
-      }
-      nav {
-        text-align: center;
-      }
-      ul {
-        display: flex;
-        justify-content: space-between;
-      }
-      nav > ul {
-        padding: 4px 16px;
-      }
-      li {
-        display: flex;
-        padding: 6px 8px;
-      }
-      a {
-        color: #067df7;
-        text-decoration: none;
-        font-size: 13px;
+      .logo a {
+        color: #fff;
+        font-weight: 700;
+        font-size: 16px;
       }
     `}</style>
-  </nav>
-)
+  </Header>
+);
 
-export default Nav
+export default Nav;
