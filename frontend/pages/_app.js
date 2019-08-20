@@ -29,6 +29,9 @@ class Layout extends React.Component {
             min-height: calc(100vh - 64px);
             padding: 40px 50px;
           }
+          :global(.mr--20) {
+            margin-right: 20px;
+          }
         `}</style>
       </div>
     );
