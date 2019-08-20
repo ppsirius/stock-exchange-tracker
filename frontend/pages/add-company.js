@@ -1,5 +1,6 @@
 import { Form, Input, Button } from "antd";
 import AlphaVantageApi from "../api/alpha-vantage";
+import store from "store";
 
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -14,7 +15,13 @@ class AddCompany extends React.Component {
     e.preventDefault();
     AlphaVantageApi.searchSymbol(
       this.props.form.getFieldValue("companySymbol")
-    ).then(res => console.log(res));
+    ).then(res => {
+      store.set(
+        "stock_exchange_" + this.props.form.getFieldValue("companySymbol"),
+        res
+      );
+      console.log(res);
+    });
     // this.props.form.validateFields((err, values) => {
     //   // @todo temporary solution from ant design lib
     //   if (!err) {

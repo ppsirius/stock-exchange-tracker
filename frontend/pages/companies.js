@@ -1,4 +1,5 @@
 import { List, Avatar, Icon } from "antd";
+import store from "store";
 
 const data = [
   {
@@ -34,6 +35,14 @@ const data = [
 ];
 
 class Companies extends React.Component {
+  componentDidMount() {
+    store.each(function(value, key) {
+      if (key.includes("stock_exchange_")) {
+        console.log(key, value);
+      }
+    });
+  }
+
   render() {
     return (
       <div>
