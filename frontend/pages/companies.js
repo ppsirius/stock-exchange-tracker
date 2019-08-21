@@ -1,5 +1,8 @@
 import { List, Avatar, Icon } from "antd";
-import store from "store";
+import {
+  checkTrackedCompanies,
+  removeTrackedCompany
+} from "../api/localStorage";
 
 class Companies extends React.Component {
   constructor(props) {
@@ -11,19 +14,17 @@ class Companies extends React.Component {
   }
 
   componentDidMount() {
-    store.each((value, key) => {
-      if (key.includes("stock_exchange_")) {
-        this.setState(prevState => {
-          return {
-            companies: [...prevState.companies, value]
-          };
-        });
-      }
+    checkTrackedCompanies().forEach(company => {
+      this.setState(prevState => {
+        return {
+          companies: [...prevState.companies, company]
+        };
+      });
     });
   }
 
   deleteCompany = symbol => {
-    store.remove(`stock_exchange_${symbol}`);
+    removeTrackedCompany(symbol);
     this.setState(prevState => {
       return {
         companies: prevState.companies.filter(company => {
@@ -70,7 +71,7 @@ class Companies extends React.Component {
                     } ${company.timezone}`}</span>
                     <br />
                     <span className="company__price mr--20">
-                      {company.price} USD
+                      <strong>{company.price}</strong> USD
                     </span>
                     <span className="company__stats mr--20">
                       {company.stats}

@@ -1,11 +1,21 @@
-import { Form, Input, Button } from "antd";
 import AlphaVantageApi from "../api/alpha-vantage";
 import store from "store";
 import Router from "next/router";
 
+// Ant Design
+import { Form, Input, Button, message } from "antd";
+
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
+
+const success = () => {
+  message.success("Company is added");
+};
+
+const error = () => {
+  message.error(`Company symbol doesn't exist`);
+};
 
 class AddCompany extends React.Component {
   componentDidMount() {
@@ -14,24 +24,28 @@ class AddCompany extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const companySymbol = this.props.form.getFieldValue("companySymbol");
+    const companySymbol = this.props.form
+      .getFieldValue("companySymbol")
+      .toUpperCase();
 
-    AlphaVantageApi.searchSymbol(companySymbol)
-      .then(companySymbolResponse => {
-        AlphaVantageApi.getQuote(companySymbol).then(companyQuoteResponse => {
-          const company = { ...companySymbolResponse, ...companyQuoteResponse };
+    AlphaVantageApi.searchSymbol(companySymbol).then(companySymbolResponse => {
+      AlphaVantageApi.getQuote(companySymbol).then(companyQuoteResponse => {
+        const company = { ...companySymbolResponse, ...companyQuoteResponse };
+
+        if (company.symbol) {
           store.set("stock_exchange_" + companySymbol, company);
-        });
-      })
-      .finally(
-        // @todo show some notification and redirect
-        setTimeout(() => {
-          Router.push({
-            pathname: "/companies",
-            query: { companyAdded: "true" }
-          });
-        }, 2000)
-      );
+          success();
+
+          setTimeout(() => {
+            Router.push({
+              pathname: "/companies"
+            });
+          }, 2000);
+        } else {
+          error();
+        }
+      });
+    });
   };
 
   render() {
@@ -58,7 +72,10 @@ class AddCompany extends React.Component {
               rules: [
                 { required: true, message: "Please input your company symbol!" }
               ]
-            })(<Input placeholder="Company symbol" />)}
+            })(
+              // @todo on debounce we should check that typed symbol is exist in API
+              <Input placeholder="Company symbol" />
+            )}
           </Form.Item>
           <Form.Item>
             <Button

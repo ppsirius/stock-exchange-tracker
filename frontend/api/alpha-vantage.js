@@ -4,7 +4,7 @@ import { mapKeys } from "lodash";
 const apiKey = "42342fds2re34243";
 
 const searchSymbol = async keyword => {
-  const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${keyword}&apikey=${apiKey}`;
+  const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${keyword.toUpperCase()}&apikey=${apiKey}`;
   return await axios.get(url).then(res => {
     return mapCompanyEntity(filterBestMatches(res.data, keyword)[0]);
   });
