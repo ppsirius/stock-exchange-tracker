@@ -1,7 +1,5 @@
 import { List, Avatar, Icon } from "antd";
 import store from "store";
-var expirePlugin = require("store/plugins/expire");
-store.addPlugin(expirePlugin);
 
 class Companies extends React.Component {
   constructor(props) {
@@ -24,6 +22,17 @@ class Companies extends React.Component {
     });
   }
 
+  deleteCompany = symbol => {
+    store.remove(`stock_exchange_${symbol}`);
+    this.setState(prevState => {
+      return {
+        companies: prevState.companies.filter(company => {
+          return company.symbol !== symbol;
+        })
+      };
+    });
+  };
+
   render() {
     return (
       <div>
@@ -34,7 +43,6 @@ class Companies extends React.Component {
           dataSource={this.state.companies}
           renderItem={company => (
             <List.Item>
-              {console.log(company)}
               <List.Item.Meta
                 avatar={
                   <Avatar
@@ -78,6 +86,7 @@ class Companies extends React.Component {
                   className="delete__icon"
                   type="close-circle"
                   style={{ fontSize: "24px" }}
+                  onClick={() => this.deleteCompany(company.symbol)}
                 />
               </div>
             </List.Item>
