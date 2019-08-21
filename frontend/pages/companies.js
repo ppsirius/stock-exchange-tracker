@@ -1,44 +1,25 @@
 import { List, Avatar, Icon } from "antd";
 import store from "store";
-
-const data = [
-  {
-    name: "Alpabet Inc.",
-    symbol: "GOOG",
-    website: "abc.xyx",
-    country: "United State",
-    date: "09:30 - 16:00 UTC-5",
-    price: "102.99",
-    stats: "-13.73 (1.32%)",
-    closed: "2018-11-23"
-  },
-  {
-    name: "Facebook Inc",
-    symbol: "FB",
-    website: "abc.xyx",
-    country: "United State",
-    date: "09:30 - 16:00 UTC-5",
-    price: "102.99",
-    stats: "-13.73 (1.32%)",
-    closed: "2018-11-23"
-  },
-  {
-    name: "Vapotherm Inc.",
-    symbol: "GOOG",
-    website: "abc.xyx",
-    country: "United State",
-    date: "09:30 - 16:00 UTC-5",
-    price: "102.99",
-    stats: "+3.73 (4.32%)",
-    closed: "2018-11-23"
-  }
-];
+var expirePlugin = require("store/plugins/expire");
+store.addPlugin(expirePlugin);
 
 class Companies extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      companies: []
+    };
+  }
+
   componentDidMount() {
-    store.each(function(value, key) {
+    store.each((value, key) => {
       if (key.includes("stock_exchange_")) {
-        console.log(key, value);
+        this.setState(prevState => {
+          return {
+            companies: [...prevState.companies, value]
+          };
+        });
       }
     });
   }
@@ -50,9 +31,10 @@ class Companies extends React.Component {
 
         <List
           itemLayout="horizontal"
-          dataSource={data}
-          renderItem={item => (
+          dataSource={this.state.companies}
+          renderItem={company => (
             <List.Item>
+              {console.log(company)}
               <List.Item.Meta
                 avatar={
                   <Avatar
@@ -63,26 +45,30 @@ class Companies extends React.Component {
                 }
                 title={
                   <div className="company">
-                    <span className="company__name mr--20">{item.name}</span>
+                    <span className="company__name mr--20">{company.name}</span>
                     <span className="company__symbol mr--20">
-                      {item.symbol}
+                      {company.symbol}
                     </span>
-                    <span className="company__website">{item.website}</span>
+                    <span className="company__website" />
                   </div>
                 }
                 description={
                   <div>
                     <span className="company__country mr--20">
-                      {item.country}
+                      {company.region}
                     </span>
-                    <span className="company__date">{item.date}</span>
+                    <span className="company__date">{`${company.marketOpen} - ${
+                      company.marketClose
+                    } ${company.timezone}`}</span>
                     <br />
                     <span className="company__price mr--20">
-                      {item.price} USD
+                      {company.price} USD
                     </span>
-                    <span className="company__stats mr--20">{item.stats}</span>
+                    <span className="company__stats mr--20">
+                      {company.stats}
+                    </span>
                     <span className="company__closed">
-                      Closed: {item.closed}
+                      Closed: {company.closed}
                     </span>
                   </div>
                 }

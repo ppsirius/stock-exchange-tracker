@@ -1,6 +1,7 @@
 import { Form, Input, Button } from "antd";
 import AlphaVantageApi from "../api/alpha-vantage";
 import store from "store";
+import Router from "next/router";
 
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -13,24 +14,24 @@ class AddCompany extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    AlphaVantageApi.searchSymbol(
-      this.props.form.getFieldValue("companySymbol")
-    ).then(res => {
-      store.set(
-        "stock_exchange_" + this.props.form.getFieldValue("companySymbol"),
-        res
+    const companySymbol = this.props.form.getFieldValue("companySymbol");
+
+    AlphaVantageApi.searchSymbol(companySymbol)
+      .then(companySymbolResponse => {
+        AlphaVantageApi.getQuote(companySymbol).then(companyQuoteResponse => {
+          const company = { ...companySymbolResponse, ...companyQuoteResponse };
+          store.set("stock_exchange_" + companySymbol, company);
+        });
+      })
+      .finally(
+        // @todo show some notification and redirect
+        setTimeout(() => {
+          Router.push({
+            pathname: "/companies",
+            query: { companyAdded: "true" }
+          });
+        }, 2000)
       );
-      console.log(res);
-    });
-    // this.props.form.validateFields((err, values) => {
-    //   // @todo temporary solution from ant design lib
-    //   if (!err) {
-    //     console.log("Received values of form: ", values);
-    //   } else {
-    //     console.log(e.target);
-    //     AlphaVantageApi.searchSymbol(e.target);
-    //   }
-    // });
   };
 
   render() {

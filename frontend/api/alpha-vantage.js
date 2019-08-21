@@ -6,7 +6,7 @@ const apiKey = "42342fds2re34243";
 const searchSymbol = async keyword => {
   const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${keyword}&apikey=${apiKey}`;
   return await axios.get(url).then(res => {
-    return mapCompanyEntity(filterBestMatches(res.data, keyword));
+    return mapCompanyEntity(filterBestMatches(res.data, keyword)[0]);
   });
 };
 
@@ -17,15 +17,19 @@ const filterBestMatches = (matches, keyword) => {
 };
 
 const mapCompanyEntity = companyEntity => {
-  if (companyEntity.length > 1) {
-    console.log("more than one entity");
-  }
-
-  return mapKeys(companyEntity[0], (value, key) => {
+  return mapKeys(companyEntity, (value, key) => {
     return key.slice(key.indexOf(" ") + 1);
   });
 };
 
+const getQuote = async symbol => {
+  const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`;
+  return await axios.get(url).then(res => {
+    return mapCompanyEntity(res.data["Global Quote"]);
+  });
+};
+
 export default {
-  searchSymbol
+  searchSymbol,
+  getQuote
 };
