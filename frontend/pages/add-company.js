@@ -4,7 +4,7 @@ import Router from "next/router";
 import { hasErrors, success, error } from "../utils/";
 
 // Ant Design
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Row, Col } from "antd";
 
 class AddCompany extends React.Component {
   componentDidMount() {
@@ -31,6 +31,7 @@ class AddCompany extends React.Component {
         store.set("stock_exchange_" + companySymbol, company);
         success();
 
+        // readirect to companies after 1,5s
         setTimeout(() => {
           Router.push({
             pathname: "/companies"
@@ -56,31 +57,38 @@ class AddCompany extends React.Component {
       <div>
         <h1>Track new company</h1>
 
-        <Form layout="horizontal" onSubmit={this.handleSubmit}>
-          <Form.Item
-            validateStatus={companySymbolError ? "error" : ""}
-            help={companySymbolError || ""}
-            extra="Provide the stock exchange symbol of a company you want to track"
-          >
-            {getFieldDecorator("companySymbol", {
-              rules: [
-                { required: true, message: "Please input your company symbol!" }
-              ]
-            })(
-              // @todo on debounce we should check that typed symbol is exist in API
-              <Input placeholder="Company symbol" />
-            )}
-          </Form.Item>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={hasErrors(getFieldsError())}
-            >
-              Track
-            </Button>
-          </Form.Item>
-        </Form>
+        <Row>
+          <Col span={10}>
+            <Form layout="horizontal" onSubmit={this.handleSubmit}>
+              <Form.Item
+                validateStatus={companySymbolError ? "error" : ""}
+                help={companySymbolError || ""}
+                extra="Provide the stock exchange symbol of a company you want to track"
+              >
+                {getFieldDecorator("companySymbol", {
+                  rules: [
+                    {
+                      required: true,
+                      message: "Please input your company symbol!"
+                    }
+                  ]
+                })(
+                  // @todo on debounce we should check that typed symbol is exist in API
+                  <Input placeholder="Company symbol" />
+                )}
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  disabled={hasErrors(getFieldsError())}
+                >
+                  Track
+                </Button>
+              </Form.Item>
+            </Form>
+          </Col>
+        </Row>
       </div>
     );
   }

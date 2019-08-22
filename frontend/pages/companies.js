@@ -1,14 +1,16 @@
+import Link from "next/link";
 import classnames from "classnames";
 import {
   checkTrackedCompanies,
   removeTrackedCompany
 } from "../api/localStorage";
-import { green, red } from "@ant-design/colors";
 import numeral from "numeral";
+import produce from "immer";
 import ClearbirApi from "../api/clearbit";
-import Link from "next/link";
 
+// Ant Design
 import { List, Avatar, Icon } from "antd";
+import { green, red } from "@ant-design/colors";
 
 class Companies extends React.Component {
   constructor(props) {
@@ -19,27 +21,38 @@ class Companies extends React.Component {
     };
   }
 
-  componentDidMount() {
-    checkTrackedCompanies().forEach(company => {
+  async componentDidMount() {
+    await checkTrackedCompanies().forEach(company => {
       this.setState(prevState => {
         return {
           companies: [...prevState.companies, company]
         };
       });
     });
-  }
 
-  componentDidUpdate(prevProps, prevState) {
-    this.fetchAndSaveAllCompanyLogoAndDomain();
-  }
-
-  fetchAndSaveAllCompanyLogoAndDomain = () => {
-    this.state.companies.forEach(company => {
-      ClearbirApi.searchCompanyLogo(company.name).then(res => {
-        // @todo update in state and local storage
-        return res;
-      });
+    this.state.companies.forEach((company, index) => {
+      this.fetchCompanyLogoAndDomain(company, index);
     });
+  }
+
+  fetchCompanyLogoAndDomain = (company, index) => {
+    if (!company.logo) {
+      ClearbirApi.searchCompanyLogo(company.name).then(res => {
+        this.setState(
+          produce(draft => {
+            if (res) {
+              draft.companies[index].logo = res.logo;
+              draft.companies[index].domain = res.domain;
+            } else {
+              draft.companies[index].logo = null;
+              draft.companies[index].domain = "";
+            }
+          })
+        );
+      });
+      // @todo update also local storage
+      // save image to base64
+    }
   };
 
   deleteCompany = symbol => {
@@ -67,11 +80,7 @@ class Companies extends React.Component {
               <List.Item>
                 <List.Item.Meta
                   avatar={
-                    <Avatar
-                      shape="square"
-                      size={64}
-                      src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                    />
+                    <Avatar shape="square" size={64} src={company.logo} />
                   }
                   title={
                     <div className="company">
@@ -81,7 +90,7 @@ class Companies extends React.Component {
                       <span className="company__symbol mr--20">
                         {company.symbol}
                       </span>
-                      <span className="company__website" />
+                      <span className="company__website">{company.domain}</span>
                     </div>
                   }
                   description={
@@ -102,7 +111,7 @@ class Companies extends React.Component {
                           "company__stats--up": Math.sign(company.change) === 1
                         })}
                       >
-                        {numeral(company.change).format("0.00")}(
+                        {numeral(company.change).format("0.00")} (
                         {company["change percent"]})
                       </span>
                       <span className="company__closed">
