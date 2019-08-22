@@ -26,7 +26,7 @@ class AddCompany extends React.Component {
 
     Promise.all([searchSymbol, getQuote]).then(res => {
       if (res[0].symbol) {
-        console.log(res);
+        // @todo company type "Mutual Fund" doesn't return quote
         const company = { ...res[0], ...res[1] };
         store.set("stock_exchange_" + companySymbol, company);
         success();

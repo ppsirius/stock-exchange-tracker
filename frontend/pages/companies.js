@@ -4,6 +4,7 @@ import {
   removeTrackedCompany
 } from "../api/localStorage";
 import { green, red } from "@ant-design/colors";
+import numeral from "numeral";
 
 import { List, Avatar, Icon } from "antd";
 
@@ -76,14 +77,16 @@ class Companies extends React.Component {
                     } ${company.timezone}`}</span>
                     <br />
                     <span className="company__price mr--20">
-                      <strong>{company.price}</strong> USD
+                      <strong>{numeral(company.price).format("0.00")}</strong>{" "}
+                      USD
                     </span>
                     <span
                       className={classnames("company__stats mr--20", {
                         "company__stats--up": Math.sign(company.change) === 1
                       })}
                     >
-                      {company.change} ({company["change percent"]})
+                      {numeral(company.change).format("0.00")}(
+                      {company["change percent"]})
                     </span>
                     <span className="company__closed">
                       Closed: {company["latest trading day"]}
