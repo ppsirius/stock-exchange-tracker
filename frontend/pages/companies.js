@@ -33,6 +33,8 @@ class Companies extends React.Component {
     this.state.companies.forEach((company, index) => {
       this.fetchCompanyLogoAndDomain(company, index);
     });
+
+    // @todo should also send request and update quota details
   }
 
   fetchCompanyLogoAndDomain = (company, index) => {
@@ -90,7 +92,13 @@ class Companies extends React.Component {
                       <span className="company__symbol mr--20">
                         {company.symbol}
                       </span>
-                      <span className="company__website">{company.domain}</span>
+                      <a
+                        href={"https://" + company.domain}
+                        target="_blank"
+                        className="company__website"
+                      >
+                        {company.domain}
+                      </a>
                     </div>
                   }
                   description={
@@ -134,7 +142,7 @@ class Companies extends React.Component {
         ) : (
           <div>
             <p>
-              {/* @todo add some loader befor localstorage is loaded */}
+              {/* @todo optional add some loader befor localstorage is loaded */}
               There are no companies yet.
               <Link href="/add-company">
                 <a>Track your first company.</a>

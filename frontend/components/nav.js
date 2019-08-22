@@ -24,7 +24,7 @@ const Nav = () => {
             theme="dark"
             mode="horizontal"
             defaultSelectedKeys={["1"]}
-            selectedKeys={router.pathname}
+            selectedKeys={[router.pathname]}
             style={{ lineHeight: "64px" }}
           >
             {/* @todo fix active element */}
