@@ -23,6 +23,7 @@ const Nav = () => (
           // defaultSelectedKeys={['2']}
           style={{ lineHeight: "64px" }}
         >
+          {/* @todo fix active element */}
           <Menu.Item key="1">
             <Link href="/companies">
               <a>Companies</a>

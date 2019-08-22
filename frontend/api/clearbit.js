@@ -3,12 +3,15 @@ import axios from "axios";
 // Company logo and website
 // https://clearbit.com/docs?javascript#company-api
 
-const searchCompanyDetails = async companyName => {
-  // @todo clean up sufix in comapny name
-  const url = `https://autocomplete.clearbit.com/v1/companies/suggest?query=${companyName}`;
+const searchCompanyLogo = async companyName => {
+  const formatedName = companyName.replace(/ Inc.| L.P.| Limited/gi, "");
+
+  const url = `https://autocomplete.clearbit.com/v1/companies/suggest?query=${formatedName}`;
   return await axios.get(url).then(res => {
-    const response = res;
-    console.log(response);
-    return response;
+    return res.data[0];
   });
+};
+
+export default {
+  searchCompanyLogo
 };
