@@ -1,7 +1,7 @@
 import axios from "axios";
 import { mapKeys } from "lodash";
 
-const apiKey = "42342fds2re34243";
+const apiKey = process.env.ALPHA_VANTAGE_KEY;
 
 // Company details endpoint
 // https://www.alphavantage.co/documentation/
