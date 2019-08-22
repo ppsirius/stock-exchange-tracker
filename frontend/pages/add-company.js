@@ -24,29 +24,50 @@ class AddCompany extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+
     const companySymbol = this.props.form
       .getFieldValue("companySymbol")
       .toUpperCase();
 
-    AlphaVantageApi.searchSymbol(companySymbol).then(companySymbolResponse => {
-      AlphaVantageApi.getQuote(companySymbol).then(companyQuoteResponse => {
-        const company = { ...companySymbolResponse, ...companyQuoteResponse };
+    const searchSymbol = AlphaVantageApi.searchSymbol(companySymbol);
+    const getQuote = AlphaVantageApi.getQuote(companySymbol);
 
-        if (company.symbol) {
-          store.set("stock_exchange_" + companySymbol, company);
-          success();
+    Promise.all([searchSymbol, getQuote]).then(res => {
+      if (res[0].symbol) {
+        const company = { ...res[0], ...res[1] };
+        store.set("stock_exchange_" + companySymbol, company);
+        success();
 
-          setTimeout(() => {
-            Router.push({
-              pathname: "/companies"
-            });
-          }, 2000);
-        } else {
-          error();
-        }
-      });
+        setTimeout(() => {
+          Router.push({
+            pathname: "/companies"
+          });
+        }, 1500);
+      } else {
+        error();
+      }
     });
   };
+
+  //   AlphaVantageApi.searchSymbol(companySymbol).then(companySymbolResponse => {
+  //     AlphaVantageApi.getQuote(companySymbol).then(companyQuoteResponse => {
+  //       const company = { ...companySymbolResponse, ...companyQuoteResponse };
+
+  //       if (company.symbol) {
+  //         store.set("stock_exchange_" + companySymbol, company);
+  //         success();
+
+  //         setTimeout(() => {
+  //           Router.push({
+  //             pathname: "/companies"
+  //           });
+  //         }, 2000);
+  //       } else {
+  //         error();
+  //       }
+  //     });
+  //   });
+  // };
 
   render() {
     const {
