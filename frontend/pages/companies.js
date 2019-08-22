@@ -1,8 +1,11 @@
-import { List, Avatar, Icon } from "antd";
+import classnames from "classnames";
 import {
   checkTrackedCompanies,
   removeTrackedCompany
 } from "../api/localStorage";
+import { green, red } from "@ant-design/colors";
+
+import { List, Avatar, Icon } from "antd";
 
 class Companies extends React.Component {
   constructor(props) {
@@ -22,6 +25,8 @@ class Companies extends React.Component {
       });
     });
   }
+
+  fetchCompanyLogo = keyword => {};
 
   deleteCompany = symbol => {
     removeTrackedCompany(symbol);
@@ -73,11 +78,15 @@ class Companies extends React.Component {
                     <span className="company__price mr--20">
                       <strong>{company.price}</strong> USD
                     </span>
-                    <span className="company__stats mr--20">
-                      {company.stats}
+                    <span
+                      className={classnames("company__stats mr--20", {
+                        "company__stats--up": Math.sign(company.change) === 1
+                      })}
+                    >
+                      {company.change} ({company["change percent"]})
                     </span>
                     <span className="company__closed">
-                      Closed: {company.closed}
+                      Closed: {company["latest trading day"]}
                     </span>
                   </div>
                 }
@@ -97,6 +106,12 @@ class Companies extends React.Component {
           .company__name {
             font-weight: 700;
             font-size: 20px;
+          }
+          .company__stats {
+            color: ${red[5]};
+          }
+          .company__stats--up {
+            color: ${green[5]};
           }
         `}</style>
       </div>

@@ -1,21 +1,10 @@
 import AlphaVantageApi from "../api/alpha-vantage";
 import store from "store";
 import Router from "next/router";
+import { hasErrors, success, error } from "../utils/";
 
 // Ant Design
-import { Form, Input, Button, message } from "antd";
-
-function hasErrors(fieldsError) {
-  return Object.keys(fieldsError).some(field => fieldsError[field]);
-}
-
-const success = () => {
-  message.success("Company is added");
-};
-
-const error = () => {
-  message.error(`Company symbol doesn't exist`);
-};
+import { Form, Input, Button } from "antd";
 
 class AddCompany extends React.Component {
   componentDidMount() {
@@ -24,7 +13,10 @@ class AddCompany extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    this.fetchCompany();
+  };
 
+  fetchCompany = () => {
     const companySymbol = this.props.form
       .getFieldValue("companySymbol")
       .toUpperCase();
@@ -34,6 +26,7 @@ class AddCompany extends React.Component {
 
     Promise.all([searchSymbol, getQuote]).then(res => {
       if (res[0].symbol) {
+        console.log(res);
         const company = { ...res[0], ...res[1] };
         store.set("stock_exchange_" + companySymbol, company);
         success();
@@ -48,26 +41,6 @@ class AddCompany extends React.Component {
       }
     });
   };
-
-  //   AlphaVantageApi.searchSymbol(companySymbol).then(companySymbolResponse => {
-  //     AlphaVantageApi.getQuote(companySymbol).then(companyQuoteResponse => {
-  //       const company = { ...companySymbolResponse, ...companyQuoteResponse };
-
-  //       if (company.symbol) {
-  //         store.set("stock_exchange_" + companySymbol, company);
-  //         success();
-
-  //         setTimeout(() => {
-  //           Router.push({
-  //             pathname: "/companies"
-  //           });
-  //         }, 2000);
-  //       } else {
-  //         error();
-  //       }
-  //     });
-  //   });
-  // };
 
   render() {
     const {
