@@ -13,7 +13,7 @@
     "axios": "0.19.0",
     "classnames": "2.2.6",
     "immer": "3.2.0",
-    "lodash": "4.17.15",
+    "lodash": "4.17.21",
     "next": "9.1.4",
     "numeral": "2.0.6",
     "react": "16.9.0",
