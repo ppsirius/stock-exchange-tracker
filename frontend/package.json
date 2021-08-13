@@ -14,7 +14,7 @@
     "classnames": "2.2.6",
     "immer": "3.2.0",
     "lodash": "4.17.15",
-    "next": "9.1.4",
+    "next": "11.1.0",
     "numeral": "2.0.6",
     "react": "16.9.0",
     "react-dom": "16.9.0",
